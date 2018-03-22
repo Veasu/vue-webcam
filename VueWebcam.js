@@ -100,7 +100,7 @@ const WebcamComponent = Vue.extend({
     navigator.mediaDevices.enumerateDevices()
     .then(function(devices) {
         devices.forEach(function(device) {
-            if (device.label === "See3CAM_CU30 (2560:c130)")
+            if (device.label === "Microsoft Rear Webcam")
             {
                 console.log(device.deviceId)
                 cameraID = device.deviceId;
