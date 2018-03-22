@@ -94,15 +94,36 @@ const WebcamComponent = Vue.extend({
     this.video = this.$refs.video;
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
 
-    if (navigator.getUserMedia) {
-      navigator.getUserMedia({ video: true }, (stream) => {
-        this.src = window.URL.createObjectURL(stream);
-      this.stream = stream;
-      this.hasUserMedia = true;
-    }, (error) => {
-        console.log(error);
-      });
-    }
+    var cameraID;
+    var self = this;
+
+    navigator.mediaDevices.enumerateDevices()
+    .then(function(devices) {
+        devices.forEach(function(device) {
+            if (device.label === "See3CAM_CU30 (2560:c130)")
+            {
+                console.log(device.deviceId)
+                cameraID = device.deviceId;
+            }
+        });
+
+        console.log(cameraID)
+
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia({ video: { 
+                deviceId: cameraID
+            }}, (stream) => {
+                self.src = window.URL.createObjectURL(stream);
+                self.stream = stream;
+                self.hasUserMedia = true;
+            }, (error) => {
+                console.log(error);
+            });
+        }
+    })
+    .catch(function(err) {
+        console.log(err.name + ": " + err.message);
+    });
   },
 
   beforeDestroy: function () {
